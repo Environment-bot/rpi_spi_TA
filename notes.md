@@ -96,3 +96,10 @@ When ever there is blocking or repetable code excecuted in the mainthread threre
 ## Thread-local data
 
 Threads can store local data via an instance of the threading.local class. there needs to be created 
+
+
+# creation
+
+- use event to kill threads from bad state
+    - use normal code break to break out from thread
+- 
