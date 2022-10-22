@@ -1,3 +1,4 @@
+from cmath import log
 import contextlib 
 import threading
 import logging
@@ -38,26 +39,64 @@ def tryingToAddNumber(lock : threading.Lock, data : ourdataclass)->None:
             logging.error(f"Failed to aquire lock")
 
     
+def testEventToNotifyThread(lock : threading.Lock, 
+                            data : ourdataclass,
+                            event : threading.Event
+                            )->None:
 
+    asd : int = 0
+    
+    while True:
+        if event.is_set():
+            logging.info("event recived")
+            with aquireLock(lock=lock, timeout=5) as lock:
+                if lock:
+                    asd = data.number
+                else:
+                    logging.error("Error in reading data after event")
+
+        logging.info("turning led state")
+        time.sleep(2)
+
+        if asd == 15:
+            logging.info(f"value reached value: {asd=}")
+            break
+
+
+        
 
 
 
 
 def main():
+    event = threading.Event()
     lock = threading.Lock()
     ourdata = ourdataclass()
-    thread : list[threading.Thread] = []
+    # thread : list[threading.Thread] = []
     createLogger()
-    for i in range(1, 10):
-        logging.info(f"thread {i} started")
-        threading.Thread(target=tryingToAddNumber, args=(lock, ourdata)).start()
+    thread = threading.Thread(target=testEventToNotifyThread, args=(lock, ourdata, event))
+    thread.start()
+    
+    # for i in range(1, 10):
+    #     logging.info(f"thread {i} started")
+    #     threading.Thread(target=tryingToAddNumber, args=(lock, ourdata)).start()
     
 
     
-    logging.info("Started thread and now waiting it to end")
-    # for i in thread:
-    #     i.join()
+    logging.info("Started thread")
 
+    with aquireLock(lock=lock, timeout=10) as lock:
+        if lock:
+            ourdata.number=15
+        else:
+            logging.error("failed to chainge ourdata value")
+    
+    time.sleep(10)
+    logging.info("trying to notify thread")
+    event.set()
+    logging.info("waiting to other thread to break out")
+    thread.join()
+    
     logging.info(f"in main after .join || {ourdata.number} ||")
     logging.info("all done")
 
