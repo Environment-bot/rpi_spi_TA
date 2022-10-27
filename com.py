@@ -1,17 +1,10 @@
+import queue
 import typing
 import spidev
 
 class Communication(typing.Protocol):
 
-    bits_per_word : int =0
-    cshigh : int = 0
-    loop :bool = False
-    no_cs : bool = False
-    lsbfirst : bool = False
-    max_speed_hz : int = 5000
-    mode : int = 0
-    threewire :bool = False
-
+  
     
 
     def openConnection(self) -> None:
@@ -26,7 +19,7 @@ class Communication(typing.Protocol):
     def WriteToBuffer(self, list : list[bytes]) -> None:
         ...
 
-    def ReadBuffer() -> None:
+    def ReadBuffer() -> bytes:
         ...
     
 
@@ -46,7 +39,7 @@ class SPICom():
         self.spidev.close()
 
     def Write(list : list[bytes]) -> None:
-        
+        ...
 
     def WriteToBuffer(list : list[bytes]) -> None:
         ...

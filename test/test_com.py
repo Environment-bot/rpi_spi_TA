@@ -9,6 +9,7 @@ REAL_SYSTEM_IN_USE : bool = False
 TESTED_OBJ : com.Communication = None
 
 @dataclasses.dataclass
+
 class data_format:
     data : bytes
     timestamp : datetime.datetime
