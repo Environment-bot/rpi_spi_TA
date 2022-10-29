@@ -20,8 +20,7 @@ def test_com(testobj : com.Communication)-> None:
     pass
 
 def test_write_to_buffer(testobj : com.Communication)-> None:
-    test_data = dataprep()
-    testobj.WriteToBuffer(list=)
+    pass
 
 def test_read_from_buffer()->None:
     pass

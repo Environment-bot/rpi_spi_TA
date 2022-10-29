@@ -1,9 +1,13 @@
 
-from ast import Break
 import dataclasses
 import collections
 from typing import Any, overload, Protocol
 
+
+class none_value_exception(Exception):
+    pass
+class empty_fifo_exception(Exception):
+    pass
 
 class fifo_proto(Protocol):
     @overload
@@ -15,6 +19,10 @@ class fifo_proto(Protocol):
     def put(self, item : Any):
         ...
     def get(self)-> Any:
+        ...
+    def clear(self)->None:
+        ...
+    def len(self)-> int:
         ...
 
 class fifo:
@@ -30,9 +38,15 @@ class fifo:
         self.que.appendleft(item)
 
     def get(self)->Any:
-        if self.que == None: raise Exception("Fifo empty")
+        self.__is_fifo_empty()
         return self.que.pop()
+    
+    def clear(self)->None:
+        self.__is_fifo_empty()
+        self.que.clear()
 
+    def __is_fifo_empty(self):
+        if self.que == None: raise Exception("Fifo empty")
 
 @dataclasses.dataclass
 class combuffer:
