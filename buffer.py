@@ -1,4 +1,5 @@
 
+from asyncio.log import logger
 import dataclasses
 import collections
 from typing import Any, overload, Protocol
@@ -12,9 +13,11 @@ class empty_fifo_exception(Exception):
 class fifo_proto(Protocol):
     @overload
     def __init__(self) -> None:
+        """fifo has no max length"""
         ...
     @overload
     def __init__(self, maxlen : int) -> None:
+        """adding max length for fifo"""
         ...
     def put(self, item : Any):
         ...
@@ -28,13 +31,22 @@ class fifo_proto(Protocol):
 class fifo:
     @overload
     def __init__(self) -> None:
-        self.que = collections.deque()
+        """fifo has no max length"""
+        ...
     @overload
     def __init__(self, maxlen : int) -> None:
-        self.que = collections.deque(maxlen=maxlen)
+        """adding max length for fifo"""
+        ...
+
+    def __init__(self, maxlen = None):
+        if maxlen == None:
+            self.que = collections.deque()
+        else:
+            self.que = collections.deque(maxlen=maxlen)    
+        
     
     def put(self, item : Any)-> None:
-        if item == None: raise Exception("Item in put is Empty")
+        if item == None: raise none_value_exception("Item in put is Empty")
         self.que.appendleft(item)
 
     def get(self)->Any:
@@ -46,9 +58,12 @@ class fifo:
         self.que.clear()
 
     def __is_fifo_empty(self):
-        if self.que == None: raise Exception("Fifo empty")
+        if not bool(self.que)  : raise empty_fifo_exception("Fifo empty")
 
-@dataclasses.dataclass
-class combuffer:
-    in_buffer  = fifo_proto()
-    out_buffer = fifo_proto()
+    def len(self)->int:
+        return len(self.que)
+
+# @dataclasses.dataclass
+# class combuffer:
+#     in_buffer  = fifo_proto()
+#     out_buffer = fifo_proto()

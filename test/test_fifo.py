@@ -1,4 +1,6 @@
-from .. import buffer
+import sys
+sys.path.append("C:\Code\RPI4-BlinkLed")
+import buffer
 from typing import List
 import pytest
 
@@ -10,15 +12,18 @@ DATA : list[int] = [0,1,2,3,4,5,6,7,8,9,10]
 class Testfifo_tests:
     
     # Common functions
-    def __init__(self) -> None:
-        self.fifo : buffer.fifo_proto = None
+    
+    fifo : buffer.fifo_proto = None
 
     def create_fifo_without_maxlen(self) -> None:
         self.fifo =  buffer.fifo()
         
     def create_fifo_with_maxlen(self,maxlen : int) -> None:
         self.fifo = buffer.fifo(maxlen=maxlen)
+
+    # ---------------------------    
     # Tests begins
+    # ---------------------------  
     def test_fifo_put_with_empty_value(self)-> None:
         self.create_fifo_without_maxlen()
         with pytest.raises(buffer.none_value_exception):
@@ -27,7 +32,7 @@ class Testfifo_tests:
     def test_fifo_clear_empty_fifo_exception(self)->None:
         self.create_fifo_without_maxlen()
         with pytest.raises(buffer.empty_fifo_exception):
-            self.fifo.clear
+            self.fifo.clear()
 
     def test_add_and_get(self)->None:
         self.create_fifo_without_maxlen()
@@ -36,11 +41,12 @@ class Testfifo_tests:
             self.fifo.put(item=item)
         # assert that data comes out as expected
         for index in range(0, 5):
+            # print(index)
             assert self.fifo.get() == DATA[index]
         # insert data to fifo
         self.fifo.put(999)
         #check that data is still coming in order
-        for index in range(6,10):
+        for index in range(5,11):
             assert self.fifo.get() == DATA[index]
         assert self.fifo.get() == 999
 
@@ -55,6 +61,12 @@ class Testfifo_tests:
         self.fifo.clear()
         assert self.fifo.len() == 0
 
+    def test_fifo_get_from_empty_error_rise(self):
+        #create empty fifo
+        self.create_fifo_without_maxlen()
+        #try to get value from empty fifo
+        with pytest.raises(buffer.empty_fifo_exception):
+            self.fifo.get()
 
 
 # Runner

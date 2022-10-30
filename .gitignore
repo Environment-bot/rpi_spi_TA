@@ -1,3 +1,6 @@
 .$spidev_runner.drawio.bkp
 .$spidev_runner.drawio.dtmp
 
+test/__pycache__/test_fifo.cpython-39-pytest-7.1.3.pyc
+__pycache__/buffer.cpython-39.pyc
+

@@ -103,3 +103,15 @@ Threads can store local data via an instance of the threading.local class. there
 - use event to kill threads from bad state
     - use normal code break to break out from thread
 - 
+
+# Logging
+
+Here is presented logging notes
+
+## good loggin format
+```python
+def createLogger()->None:
+    formatt = "[%(asctime)s] - [%(threadName)13s] - [%(name)8s] - [%(levelname)8s] -- %(message)s (%(filename)s:%(lineno)s)"
+    logging.basicConfig(format=formatt, level=logging.INFO,
+                        datefmt="%H:%M:%S")
+```
