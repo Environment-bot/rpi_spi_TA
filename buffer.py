@@ -1,6 +1,3 @@
-
-from asyncio.log import logger
-import dataclasses
 import collections
 from typing import Any, overload, Protocol
 
@@ -63,7 +60,3 @@ class fifo:
     def len(self)->int:
         return len(self.que)
 
-# @dataclasses.dataclass
-# class combuffer:
-#     in_buffer  = fifo_proto()
-#     out_buffer = fifo_proto()

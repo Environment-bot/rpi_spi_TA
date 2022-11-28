@@ -1,48 +1,92 @@
+import sys
+sys.path.append("C:\Code\RPI4-BlinkLed")
 import dataclasses
 import datetime
 from typing import List
-from .. import com 
+import com 
 import pytest
+import buffer
+import logging
 
-
+# Global variables
 REAL_SYSTEM_IN_USE : bool = False
-TESTED_OBJ : com.Communication = None
+DEV : int = 1
+BUS : int = 2
 
 @dataclasses.dataclass
-
 class data_format:
     data : bytes
     timestamp : datetime.datetime
 
 
+class spidev_mock():
+    def __init__(self, dev:int, bus:int) -> None:
+        pass
+    def open(self, bus,dev)->None:
+        pass
+    def close(self)->None:
+        pass
+    def writebytes2(self, list)->None:
+        pass
 
-def test_com(testobj : com.Communication)-> None:
-    pass
+# check if real system is used
+if REAL_SYSTEM_IN_USE:
+    # this is used when testing with real enviroment
+    import spidev
+    pytestmark = pytest.mark.parametrize("spidevobj", [spidev_mock(bus=BUS, dev=DEV), spidev.SpiDev()])
+else:
+    # this is used when testing without real enviroment
+    pytestmark = pytest.mark.parametrize("spidevobj", [spidev_mock(bus=BUS, dev=DEV)])
 
-def test_write_to_buffer(testobj : com.Communication)-> None:
-    pass
 
-def test_read_from_buffer()->None:
-    pass
 
-def test_write()-> None:
-    pass
+@pytest.fixture
+def com_obj(spidevobj : com.Communication)-> com.Communication:
+    return com.SPICom(dev=DEV, bus=BUS, spidev=spidevobj)
+@pytest.fixture
+def com_obj_empty(spidevobj : com.Communication)->com.Communication:
+    return com.SPICom(dev=DEV, bus=None, spidev=spidevobj)
 
-def test_open_connection(testobj : com.Communication, sys : bool=False)->None:
-    pass
+@pytest.fixture
+def com_obj_open(com_obj : com.Communication)->com.Communication:
+    return com_obj.openConnection()
 
-def test_close_connection()->None:
-    pass
 
-def connect(testobj : com.Communication)-> None:
-    pass
+@pytest.fixture
+def create_test_data(self)->List[bytes]:
+    lista = []
+    return [lista.append(bytes(i)) for i in range(0, 500)]
 
-def close(testobj : com.Communication)-> None:
-    pass
+def test_open_communication(com_obj : com.Communication)->None:
+    if com_obj == None:
+        logging.warning("Ei oo mitää")
+    logging.warning(f"testiiiiiiiii{com_obj.state=}")
+    com_obj.openConnection()
+    assert com_obj.state == com.com_state.CONNECTED
 
-def dataprep()-> List[data_format]:
-    lista : List[data_format] = []
-    for i in range(0,6):
-        lista.append(data_format.data, data_format.)
-    lista.append("0x00F")
-    return lista
+def test_open_communication_error(com_obj_empty:com.Communication)-> None:
+    with pytest.raises(ValueError):
+        com_obj_empty.openConnection()
+
+def test_close_communcation_error(com_obj : com.Communication)->None:
+    with pytest.raises(RuntimeError):
+        com_obj.closeConnection()
+
+def test_write_error(com_obj_empty : com.Communication)->None:
+    with pytest.raises(RuntimeError):
+        com_obj_empty.Write([123, "moi"])
+
+def test_read_error(com_obj_empty : com.Communication)->None:
+    with pytest.raises(RuntimeError):
+        com_obj_empty.ReadBuffer()
+
+
+
+
+
+
+
+
+
+
+
