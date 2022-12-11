@@ -26,7 +26,7 @@ class Communication(typing.Protocol):
     def Write(self, list : list[bytes]) -> None:
         ...
 
-    def ReadBuffer(self) -> bytes:
+    def ReadBuffer(self, lenght:int) -> list[bytes]:
         ...
     def setup(self, **kwargs)->None:
         ...
@@ -59,7 +59,7 @@ class SPICom():
             self.spidev.open(self.bus, self.dev)
         except Exception as e:
             print(e)
-            self.state = com_state.ERROR        
+            self.state = com_state.ERROR
         self.state = com_state.CONNECTED
 
     def closeConnection(self) -> None:
@@ -67,13 +67,17 @@ class SPICom():
         self.spidev.close()
         self.state = com_state.DISCONNECTED
 
-    def Write(self, list : list[bytes]) -> None:
+    def Write(self, list : list[bytes]) -> list[bytearray]:
+        '''Writes bytes but also returns values list
+        These values are other vice lost'''
         if self.state != com_state.CONNECTED: raise RuntimeError("Please connect before writting to bus")
-        self.spidev.writebytes2(list)
+        return self.spidev.xfer3(list)
 
-    def ReadBuffer(self) -> bytes:
+    def ReadBuffer(self, lenght : int) -> list[bytes]:
+        '''Lenght  = nuber of bytes which are read from spi device'''
+
         if self.state != com_state.CONNECTED: raise RuntimeError("Please connect before reading from bus")
-        return bytes(9999)
+        return self.spidev.readbytes(lenght)
 
     def setup(self, **kwargs)->None:
         """Possible values:

@@ -27,7 +27,7 @@ TEST_DATA : list[bytes] = [12, 15, 15, 16, 00, 10]
 def spi_fixture() -> com.Communication:
     if REAL_SYSTEM_IN_USE:        
         logging.info("Real system in use")
-        spid = com.SPICom(DEV, BUS, spidev=spidev.Spidev())
+        spid = com.SPICom(DEV, BUS, spidev=spidev.SpiDev())
         spid.setup(max_speed_hz=50000, mode=0b01)
         return spid
     else:
