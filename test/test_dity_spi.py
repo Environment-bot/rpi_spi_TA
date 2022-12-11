@@ -45,7 +45,7 @@ def test_open_connection(spi_fixture : com.Communication)->None:
 
 def test_send_and_recive_data(spi_dev_connected : com.Communication)->None:
     spi_dev_connected.Write(TEST_DATA)
-    data = spi_dev_connected.ReadBuffer()
+    data = spi_dev_connected.ReadBuffer(2)
     assert data == TEST_DATA, f"Data: {data=}\nTest_DATA:{TEST_DATA=}\n"
     spi_dev_connected.closeConnection()
 

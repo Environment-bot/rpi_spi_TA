@@ -23,7 +23,7 @@ class Communication(typing.Protocol):
     def closeConnection(self) -> None:
         ...
 
-    def Write(self, list : list[bytes]) -> None:
+    def Write(self, list : list[bytes]) -> list[bytes]:
         ...
 
     def ReadBuffer(self, lenght:int) -> list[bytes]:
@@ -67,7 +67,7 @@ class SPICom():
         self.spidev.close()
         self.state = com_state.DISCONNECTED
 
-    def Write(self, list : list[bytes]) -> list[bytearray]:
+    def Write(self, list : list[bytes]) -> list[bytes]:
         '''Writes bytes but also returns values list
         These values are other vice lost'''
         if self.state != com_state.CONNECTED: raise RuntimeError("Please connect before writting to bus")
