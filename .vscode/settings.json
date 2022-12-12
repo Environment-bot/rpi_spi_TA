@@ -1,6 +1,8 @@
 {
     "python.testing.pytestArgs": [
-        "."
+         ".",
+        // "-c",
+        // "C:/Code/RPI4-BlinkLed/test/pytest.ini"
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,

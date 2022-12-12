@@ -1,6 +1,4 @@
 
-
-import spidev
 from dataclasses import dataclass
 from datetime import date
 import threading
@@ -38,10 +36,6 @@ class writter:
     
 
 
-class
-        
-
-
 
 class spirunner:
     def __init__(self, 
@@ -55,4 +49,5 @@ class spirunner:
     def run(self):
         self.thread.start()
 
-    def 
+    def stop(self):
+        self.th

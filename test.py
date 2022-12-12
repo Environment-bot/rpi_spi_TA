@@ -4,6 +4,7 @@ import threading
 import logging
 import random
 from queue import Queue
+import sys
 
 
 SENTINEL = object()
@@ -70,8 +71,10 @@ def main()->None:
         executor.submit(producer, pipeline)
         executor.submit(customer, pipeline)
 
-
+def main2():
+    print(sys.platform)
 
 
 if "__main__" == __name__:
-    main()
+    # main()
+    main2()
