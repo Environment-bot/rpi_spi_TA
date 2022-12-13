@@ -114,3 +114,4 @@ class SPICom():
                 raise Exception(f"unknown setting {key}:{item}")
             
 
+asd = 

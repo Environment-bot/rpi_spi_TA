@@ -25,6 +25,9 @@ class fifo_proto(Protocol):
     def len(self)-> int:
         ...
 
+#TODO: Feature: get one byte at the time
+#TODO: Feature: get list of all bytes at one time
+
 class fifo:
     @overload
     def __init__(self) -> None:

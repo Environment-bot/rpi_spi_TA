@@ -2,7 +2,7 @@ import sys
 sys.path.append("C:\Code\RPI4-BlinkLed")
 import dataclasses
 import datetime
-from typing import List
+import typing
 import com 
 import pytest
 import buffer
@@ -48,30 +48,34 @@ from test_com import spidev_mock
 
 # GLOBAL VARIABLES
 
-REAL_SYSTEM_IN_USE : bool = False
+BUS=0
+DEV=0
 
 # check which enviroment is used (linux -> rpi, windows -> dev machine)
 if sys.platform.startswith('linux'):
-    REAL_SYSTEM_IN_USE = True
+    import spidev
+    pytestmark = pytest.mark.parametrize("spi_device", [spidev_mock(bus=BUS, dev=DEV), spidev.SpiDev()])
 elif sys.platform.startswith('win32'):
-    REAL_SYSTEM_IN_USE = False
+    pytestmark = pytest.mark.parametrize("spi_device", [spidev_mock(bus=BUS, dev=DEV)])
 else:
     raise RuntimeError("Unknown OS used! please update this switch case to support your OS!")
 
+@dataclasses.dataclass
+class objectss:
+    dev_obj : dev.dev
+    spi_obj : com.Communication
 
-# check if real system is used
-if REAL_SYSTEM_IN_USE:
-    # this is used when testing with real enviroment
-    import spidev
-    pytestmark = pytest.mark.parametrize("spi_device", [spidev_mock(bus=BUS, dev=DEV), spidev.SpiDev()])
-else:
-    # this is used when testing without real enviroment
-    pytestmark = pytest.mark.parametrize("spi_device", [spidev_mock(bus=BUS, dev=DEV)])
+@pytest.mark.parametrize("device",[dev.spi_dev])
+@pytest.fixture
+def dev_obj(device : dev.spi_dev, spi_device : com.SPICom):
+    
 
 
-@pytest.fixture(params=[])
-def dev_obj(dev : dev.dev, spi_device : com.Communication):
-    dev_obj = dev
+def dev_setup(dev_obj : objectss):
+    
+    dev_obj.dev_obj.setup()
+
+
 
 
 

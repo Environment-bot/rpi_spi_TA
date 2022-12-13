@@ -49,7 +49,24 @@ class Testfifo_tests:
         for index in range(5,11):
             assert self.fifo.get() == DATA[index]
         assert self.fifo.get() == 999
+    def test_add_list_and_get(self)->None:
+        self
 
+    def test_add_list_of_stuff(self):
+        self.create_fifo_without_maxlen()
+        # insert data to fifo
+        for item in DATA:
+            self.fifo.put(item=item)
+        # assert that data comes out as expected
+        for index in range(0, 5):
+            # print(index)
+            assert self.fifo.get() == DATA[index]
+        # insert data to fifo
+        self.fifo.put(999)
+        #check that data is still coming in order
+        for index in range(5,11):
+            assert self.fifo.get() == DATA[index]
+        assert self.fifo.get() == 999
     def test_fifo_clear(self):
         #create empty fifo
         self.create_fifo_without_maxlen()
